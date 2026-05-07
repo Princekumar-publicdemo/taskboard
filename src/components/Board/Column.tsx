@@ -51,7 +51,7 @@ export function Column({ status, tasks, pendingIds, onEditTask }: Props) {
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col rounded-xl border-t-4 ${statusColors[status]} bg-gray-50 dark:bg-gray-900 min-h-[300px] ${isOver ? 'ring-2 ring-blue-400' : ''}`}
+      className={`flex flex-col rounded-xl border-t-4 ${statusColors[status]} bg-gray-50 dark:bg-gray-900 min-h-[300px] overflow-hidden ${isOver ? 'ring-2 ring-blue-400' : ''}`}
     >
       <div className="p-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">

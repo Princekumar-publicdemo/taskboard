@@ -9,22 +9,17 @@ interface Props {
 }
 
 export function DraggableTask({ task, isPending, onEdit }: Props) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: task.id,
     data: { task },
   });
 
-  const style = transform
-    ? { transform: `translate(${transform.x}px, ${transform.y}px)` }
-    : undefined;
-
   return (
     <div
       ref={setNodeRef}
-      style={style}
       {...listeners}
       {...attributes}
-      className={`${isDragging ? 'opacity-50 z-50' : ''}`}
+      className={isDragging ? 'opacity-30' : ''}
     >
       <TaskCard task={task} isPending={isPending} onEdit={onEdit} />
     </div>
