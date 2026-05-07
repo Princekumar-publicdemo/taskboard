@@ -21,9 +21,11 @@ export function UndoRedoBar() {
       >
         ↪ Redo
       </button>
-      {canUndo && (
+      {(canUndo || canRedo) && (
         <span className="text-gray-400 dark:text-gray-500 ml-1">
-          Next undo: {nextUndoDescription}
+          {canUndo && <>Undo: {nextUndoDescription}</>}
+          {canUndo && canRedo && ' | '}
+          {canRedo && <>Redo: {nextRedoDescription}</>}
         </span>
       )}
     </div>

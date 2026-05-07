@@ -18,10 +18,25 @@ function AppContent() {
   useRealtimeSimulation();
 
   useEffect(() => {
-    const onError = () => toast.error('Failed to save! Change has been rolled back.');
+    const onError = () => toast.error(
+      (t) => (
+        <div className="flex items-center gap-2">
+          <span>Failed to save! Change has been rolled back.</span>
+          <button onClick={() => toast.dismiss(t.id)} className="ml-auto shrink-0 text-gray-400 hover:text-gray-600">✕</button>
+        </div>
+      ),
+    );
     const onExternal = (e: Event) => {
       const detail = (e as CustomEvent).detail;
-      toast(detail.change, { icon: '\u{1F464}', duration: 3000 });
+      toast(
+        (t) => (
+          <div className="flex items-center gap-2">
+            <span>{detail.change}</span>
+            <button onClick={() => toast.dismiss(t.id)} className="ml-auto shrink-0 text-gray-400 hover:text-gray-600">✕</button>
+          </div>
+        ),
+        { icon: '\u{1F464}', duration: 5000 },
+      );
     };
     window.addEventListener('task-error', onError);
     window.addEventListener('task-external-update', onExternal);
