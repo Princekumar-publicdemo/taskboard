@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { TaskProvider } from './context/TaskContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { BoardView } from './components/Board/BoardView';
 import { Filters } from './components/Filters/Filters';
 import { TaskForm } from './components/TaskForm/TaskForm';
 import { UndoRedoBar } from './components/common/UndoRedoBar';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { useRealtimeSimulation } from './hooks/useRealtimeSimulation';
+import { ThemeToggle } from './components/common/ThemeToggle';
 import type { Task } from './types/task';
 
 function AppContent() {
@@ -48,6 +50,7 @@ function AppContent() {
           <p className="text-sm text-gray-500 dark:text-gray-400">Real-time collaborative task management</p>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <UndoRedoBar />
           <button
             onClick={() => setShowForm(true)}
@@ -72,8 +75,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <TaskProvider>
-      <AppContent />
-    </TaskProvider>
+    <ThemeProvider>
+      <TaskProvider>
+        <AppContent />
+      </TaskProvider>
+    </ThemeProvider>
   );
 }
