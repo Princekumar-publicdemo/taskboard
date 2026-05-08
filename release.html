@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Board — Release v1.0.0</title>
+  <meta name="description" content="Release notes for Task Board v1.0.0 — Real-time collaborative task management" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .prose h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .prose h2 { font-size: 1.5rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; }
+    .prose h3 { font-size: 1.15rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+    .prose p { margin: 0.75rem 0; line-height: 1.7; }
+    .prose ul { list-style: disc; padding-left: 1.5rem; margin: 0.5rem 0; }
+    .prose ol { list-style: decimal; padding-left: 1.5rem; margin: 0.5rem 0; }
+    .prose li { margin: 0.3rem 0; line-height: 1.6; }
+    .prose code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.875rem; }
+    .prose pre { background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+    .prose pre code { background: none; padding: 0; color: inherit; }
+    .prose table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .prose th { background: #f9fafb; text-align: left; padding: 0.5rem 0.75rem; border: 1px solid #e5e7eb; font-weight: 600; }
+    .prose td { padding: 0.5rem 0.75rem; border: 1px solid #e5e7eb; }
+    .prose blockquote { border-left: 4px solid #3b82f6; padding-left: 1rem; color: #6b7280; margin: 1rem 0; }
+    .prose hr { margin: 2rem 0; border-color: #e5e7eb; }
+    .prose a { color: #2563eb; text-decoration: underline; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #111827; color: #e5e7eb; }
+      .prose h2 { border-color: #374151; }
+      .prose code { background: #1f2937; }
+      .prose th { background: #1f2937; border-color: #374151; }
+      .prose td { border-color: #374151; }
+      .prose blockquote { color: #9ca3af; }
+      .prose hr { border-color: #374151; }
+    }
+  </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+  <div class="max-w-4xl mx-auto px-6 py-12">
+    <nav class="mb-8 flex items-center justify-between">
+      <a href="./" class="text-blue-600 dark:text-blue-400 text-sm hover:underline">← Back to App</a>
+      <span class="text-xs text-gray-400">v1.0.0 • May 8, 2026</span>
+    </nav>
+    <article id="content" class="prose"></article>
+    <footer class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-400">
+      <p>Task Board v1.0.0 • Built with React 19, TypeScript & Tailwind CSS</p>
+      <p class="mt-1"><a href="./" class="text-blue-500 hover:underline">Launch App →</a></p>
+    </footer>
+  </div>
+  <script>
+    const markdown = `# 📋 Task Board — Release v1.0.0
+
+> Real-time collaborative task management board with drag-and-drop, optimistic updates, and undo/redo.
+
+**Release Date:** May 8, 2026
+**Status:** Stable
+**Live App:** [Launch Task Board](./)
+
+---
+
+## 1. Functionality
+
+### Core Features (Part 1)
+- **Kanban Board** — 3 columns: To Do, In Progress, Done
+- **Drag & Drop** — Drag tasks between columns with visual feedback (DragOverlay)
+- **Task CRUD** — Create, edit, and delete tasks via a modal form
+- **Task Fields** — Title, description, assignee, priority (Low/Medium/High), tags, status, created date
+- **Filtering** — Filter by assignee, priority, and full-text search (debounced)
+
+### Advanced Features (Part 2)
+- **Optimistic Updates with Rollback**
+  - Status changes apply instantly in the UI
+  - Simulated 2-second API delay via \`setTimeout\`
+  - 10% random failure rate triggers automatic rollback
+  - "Saving..." loading overlay on pending tasks
+  - Dismissible error toast on failure
+- **Real-Time Simulation**
+  - Another "user" modifies a random task every 10–15 seconds
+  - Toast notification shows what changed
+  - Conflict-safe: uses \`EXTERNAL_UPDATE\` action separate from user actions
+- **Performance at Scale**
+  - Custom virtualization renders only visible tasks (threshold: 30+ per column)
+  - Supports 1000+ tasks with smooth scrolling and drag-and-drop
+  - \`React.memo\` on TaskCard, DraggableTask, and Column with custom comparators
+
+### Expert Feature (Part 3 — Option A)
+- **Undo/Redo System**
+  - Tracks all task mutations (add, edit, delete, move)
+  - Keyboard shortcuts: \`Ctrl/Cmd+Z\` (undo), \`Ctrl/Cmd+Shift+Z\` (redo)
+  - History stack capped at 50 actions
+  - Lightweight diff-based history (stores only affected tasks, not full array clones)
+  - UI displays next undo/redo action description
+
+### UX Extras
+- 🌗 **Dark/Light mode toggle** with system preference detection and localStorage persistence
+- 🔔 **Dismissible toast notifications** with close button
+- 🛡️ **Error Boundaries** per column to isolate crashes
+- 📱 **Responsive layout** — mobile-friendly single-column → 3-column grid
+
+---
+
+## 2. Tech Stack
+
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| Framework | React | 19 |
+| Language | TypeScript | 6 |
+| Bundler | Vite | 8 |
+| Styling | Tailwind CSS | 4 |
+| Drag & Drop | @dnd-kit/core | latest |
+| Notifications | react-hot-toast | latest |
+| IDs | uuid | latest |
+| Testing | Vitest + @testing-library/react | latest |
+| Linting | ESLint + React Hooks plugin | 10 |
+
+### Architecture Decisions
+- **State Management:** \`useReducer\` + React Context (no external state library)
+- **Folder Structure:** Feature-based (\`components/Board/\`, \`components/TaskCard/\`, etc.)
+- **Custom Hooks:** \`useTasks\`, \`useUndoRedo\`, \`useRealtimeSimulation\` for separation of concerns
+- **No CSS-in-JS runtime:** Tailwind CSS utility classes (zero runtime overhead)
+
+---
+
+## 3. Performance
+
+### Optimizations Implemented
+
+| Technique | Impact |
+|-----------|--------|
+| **Custom virtualization** | Only ~15 DOM nodes per column regardless of list size |
+| **React.memo + custom areEqual** | Column/DraggableTask/TaskCard skip re-render when props unchanged |
+| **Stable callbacks (useCallback)** | \`moveTaskOptimistic\`, \`handleEdit\` never break child memoization |
+| **Ref-based state capture** | \`moveTaskOptimistic\` uses \`useRef\` instead of depending on \`state.tasks\` |
+| **Memoized context value** | \`useMemo\` on provider value prevents cascading re-renders |
+| **Diff-based undo history** | Stores only affected task snapshots (~1 object) instead of full array copies |
+| **Serialized pending key** | Converts \`Set<string>\` → sorted string for stable memo comparison |
+| **Debounced search** | 300ms delay prevents re-filtering on every keystroke |
+
+### Scale Testing
+- ✅ 100 tasks: instant rendering, no perceptible lag
+- ✅ 1000 tasks: smooth scrolling with virtualization, drag-and-drop responsive
+- ✅ Drag between columns: no layout shift, no horizontal scrollbar
+
+---
+
+## 4. Tests
+
+### Running Tests
+\`\`\`bash
+npm test
+\`\`\`
+
+### Critical Tests (3 tests)
+
+| # | Test | What it verifies |
+|---|------|-----------------|
+| 1 | **Task Creation** | Creating a task via the form adds it to the board |
+| 2 | **Optimistic Rollback** | On simulated failure, task reverts to original column after 2s |
+| 3 | **Undo/Redo** | Ctrl+Z removes last action; Ctrl+Shift+Z restores it |
+
+### Testing Tools
+- **Vitest** — Fast Vite-native test runner
+- **@testing-library/react** — User-centric DOM testing
+- **jsdom** — Browser environment simulation
+
+---
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev      # Start dev server
+npm test         # Run tests
+npm run build    # Production build
+npm run deploy   # Deploy to GitHub Pages
+\`\`\`
+
+---
+
+*Built with ❤️ using React 19, TypeScript, and Tailwind CSS.*
+`;
+    document.getElementById('content').innerHTML = marked.parse(markdown);
+  </script>
+</body>
+</html>
