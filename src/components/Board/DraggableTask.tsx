@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import type { Task } from '../../types/task';
 import { TaskCard } from '../TaskCard/TaskCard';
@@ -8,7 +9,8 @@ interface Props {
   onEdit?: (task: Task) => void;
 }
 
-export function DraggableTask({ task, isPending, onEdit }: Props) {
+/** PERF: Memoized so unchanged tasks don't re-render when siblings change */
+export const DraggableTask = memo(function DraggableTask({ task, isPending, onEdit }: Props) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: task.id,
     data: { task },
@@ -24,4 +26,4 @@ export function DraggableTask({ task, isPending, onEdit }: Props) {
       <TaskCard task={task} isPending={isPending} onEdit={onEdit} />
     </div>
   );
-}
+});

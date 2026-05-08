@@ -88,28 +88,34 @@ const baseTasks: Task[] = [
   },
 ];
 
-// Generate additional tasks to reach 30+
+// Generate additional tasks — supports 1000+ for perf testing
 function generateTasks(count: number): Task[] {
-  const titles = [
-    'Update dependencies', 'Add unit tests', 'Fix mobile layout', 'Optimize images',
-    'Add error tracking', 'Create onboarding flow', 'Implement search', 'Add notifications',
-    'Fix memory leak', 'Update database schema', 'Add rate limiting', 'Create admin panel',
-    'Implement caching', 'Add logging service', 'Fix accessibility issues', 'Create email templates',
-    'Add analytics', 'Implement webhooks', 'Fix timezone bugs', 'Add export feature',
-    'Optimize queries', 'Add pagination', 'Create user dashboard',
+  const titlePrefixes = [
+    'Update', 'Add', 'Fix', 'Optimize', 'Create', 'Implement', 'Refactor',
+    'Design', 'Test', 'Deploy', 'Configure', 'Migrate', 'Document', 'Review',
+  ];
+  const titleSuffixes = [
+    'dependencies', 'unit tests', 'mobile layout', 'images', 'error tracking',
+    'onboarding flow', 'search', 'notifications', 'memory leak', 'database schema',
+    'rate limiting', 'admin panel', 'caching', 'logging service', 'accessibility',
+    'email templates', 'analytics', 'webhooks', 'timezone bugs', 'export feature',
+    'queries', 'pagination', 'user dashboard', 'auth module', 'payment flow',
   ];
 
-  return titles.slice(0, count).map((title, i) => ({
+  return Array.from({ length: count }, (_, i) => ({
     id: String(baseTasks.length + i + 1),
-    title,
-    description: `Description for: ${title}`,
+    title: `${titlePrefixes[i % titlePrefixes.length]} ${titleSuffixes[i % titleSuffixes.length]}`,
+    description: `Task #${baseTasks.length + i + 1}: auto-generated for performance testing`,
     status: statuses[Math.floor(Math.random() * 3)],
     priority: priorities[Math.floor(Math.random() * 3)],
     assignee: assignees[Math.floor(Math.random() * assignees.length)],
     tags: [tags[Math.floor(Math.random() * tags.length)]],
-    createdAt: new Date(2024, 10, 10 + i).toISOString(),
+    createdAt: new Date(2024, 10, 1 + (i % 28)).toISOString(),
   }));
 }
 
-export const mockTasks: Task[] = [...baseTasks, ...generateTasks(22)];
+// Default: 30 tasks for normal usage. Set to 1000+ for stress testing.
+// Change the number below to test with large datasets:
+const GENERATED_COUNT = 100;
+export const mockTasks: Task[] = [...baseTasks, ...generateTasks(GENERATED_COUNT)];
 export { assignees };

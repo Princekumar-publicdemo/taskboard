@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { TaskProvider } from './context/TaskContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -46,10 +46,11 @@ function AppContent() {
     };
   }, []);
 
-  function handleEdit(task: Task) {
+  // PERF: Stable callback ref so memoized Column/DraggableTask/TaskCard don't break
+  const handleEdit = useCallback((task: Task) => {
     setEditingTask(task);
     setShowForm(true);
-  }
+  }, []);
 
   function handleClose() {
     setShowForm(false);

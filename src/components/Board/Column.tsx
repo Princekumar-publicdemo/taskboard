@@ -1,5 +1,5 @@
 import { useDroppable } from '@dnd-kit/core';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { memo, useState, useRef, useEffect, useCallback } from 'react';
 import type { Task, TaskStatus } from '../../types/task';
 import { DraggableTask } from './DraggableTask';
 
@@ -18,6 +18,7 @@ const statusColors: Record<TaskStatus, string> = {
 interface Props {
   status: TaskStatus;
   tasks: Task[];
+  pendingKey: string; // serialized pending IDs for stable memo comparison
   pendingIds: Set<string>;
   onEditTask?: (task: Task) => void;
 }
@@ -26,7 +27,8 @@ interface Props {
  * Simple windowing: only render tasks visible in viewport + buffer.
  * For 1000+ tasks this prevents DOM bloat while keeping drag-and-drop working.
  */
-export function Column({ status, tasks, pendingIds, onEditTask }: Props) {
+/** PERF: Memoized — only re-renders when its specific column's tasks/pendingIds change */
+export const Column = memo(function Column({ status, tasks, pendingKey: _pendingKey, pendingIds, onEditTask }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: status });
   const scrollRef = useRef<HTMLDivElement>(null);
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 30 });
@@ -88,4 +90,12 @@ export function Column({ status, tasks, pendingIds, onEditTask }: Props) {
       </div>
     </div>
   );
-}
+}, (prev, next) => {
+  // Custom comparison: use pendingKey string instead of Set reference
+  return (
+    prev.status === next.status &&
+    prev.tasks === next.tasks &&
+    prev.pendingKey === next.pendingKey &&
+    prev.onEditTask === next.onEditTask
+  );
+});

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { DndContext, DragOverlay, type DragStartEvent, type DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { useTaskContext } from '../../context/TaskContext';
 import { useTasks } from '../../hooks/useTasks';
@@ -18,6 +18,10 @@ export function BoardView({ onEditTask }: Props) {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+
+  // PERF: Convert Set to a sorted string so Column can use it as a stable memo dep.
+  // Only changes when the actual pending IDs change, not on unrelated state updates.
+  const pendingKey = useMemo(() => Array.from(state.pendingUpdates).sort().join(','), [state.pendingUpdates]);
 
   function handleDragStart(event: DragStartEvent) {
     const task = event.active.data.current?.task as Task | undefined;
@@ -44,6 +48,7 @@ export function BoardView({ onEditTask }: Props) {
             key={status}
             status={status}
             tasks={columns[status]}
+            pendingKey={pendingKey}
             pendingIds={state.pendingUpdates}
             onEditTask={onEditTask}
           />

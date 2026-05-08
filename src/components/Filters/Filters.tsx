@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useTaskContext } from '../../context/TaskContext';
 import type { Priority } from '../../types/task';
 import { assignees } from '../../data/mockTasks';
@@ -8,19 +8,13 @@ export function Filters() {
   const { filters } = state;
   const [searchLocal, setSearchLocal] = useState(filters.search);
 
-  // Debounced search
-  const debounceRef = useCallback(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    return (value: string) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => dispatch({ type: 'SET_FILTERS', filters: { search: value } }), 300);
-    };
-  }, [dispatch])();
-
-  function handleSearch(value: string) {
+  // PERF: Stable debounce using a ref to hold the timer across renders
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const handleSearch = useCallback((value: string) => {
     setSearchLocal(value);
-    debounceRef(value);
-  }
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => dispatch({ type: 'SET_FILTERS', filters: { search: value } }), 300);
+  }, [dispatch]);
 
   return (
     <div className="flex flex-wrap items-center gap-3">
